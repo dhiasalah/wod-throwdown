@@ -1,0 +1,112 @@
+@import '@fontsource/oswald/400.css';
+@import '@fontsource/oswald/500.css';
+@import '@fontsource/oswald/600.css';
+@import '@fontsource/oswald/700.css';
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-paper text-ink font-body antialiased;
+    /* Subtle paper texture: faint speckle so surfaces don't read as flat digital white. */
+    background-image: radial-gradient(rgba(27, 36, 48, 0.025) 0.5px, transparent 0.5px);
+    background-size: 14px 14px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Respect notches / home indicator on phones */
+  #root {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display;
+    letter-spacing: 0.01em;
+  }
+}
+
+@layer components {
+  /* Section title with a hairline rule underneath — a whiteboard cue. */
+  .section-title {
+    @apply font-display text-xl font-600 uppercase tracking-wide text-ink;
+  }
+  .hairline-rule {
+    @apply border-b border-hairline;
+  }
+
+  .card {
+    @apply bg-card rounded-xl2 shadow-card border border-hairline;
+  }
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 font-display text-base font-600 uppercase tracking-wide transition active:scale-[0.98] disabled:opacity-40 disabled:pointer-events-none;
+    min-height: 48px; /* large tap target */
+  }
+  .btn-primary {
+    @apply btn bg-crimson text-white shadow-card;
+  }
+  .btn-ghost {
+    @apply btn bg-transparent text-ink border border-hairline;
+  }
+  .btn-quiet {
+    @apply btn bg-paper text-ink;
+  }
+  .btn-danger {
+    @apply btn bg-transparent text-crimson border border-crimson/40;
+  }
+
+  /* Form controls */
+  .field {
+    @apply w-full rounded-xl border border-hairline bg-card px-4 py-3 text-base text-ink outline-none transition placeholder:text-muted focus:border-crimson focus:ring-2 focus:ring-crimson/20;
+    min-height: 48px;
+  }
+  .label {
+    @apply block text-sm font-600 text-muted uppercase tracking-wide mb-1.5;
+  }
+
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes slideup {
+    from {
+      transform: translateY(12px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  /* Chip / pill */
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-hairline bg-paper px-3 py-1 text-sm font-500 text-ink;
+  }
+  .chip-active {
+    @apply chip bg-ink text-white border-ink;
+  }
+}
