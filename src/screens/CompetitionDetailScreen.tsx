@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useStore } from '../store';
 import { Card, EmptyState, MarkerDot, TypePill } from '../components/ui';
-import { ScoreRow } from '../components/ScoreEntry';
+import { ScoreLegend, ScoreRow } from '../components/ScoreEntry';
 import { Leaderboard } from '../components/Leaderboard';
 import { formatDate } from './CompetitionsScreen';
 import { formatTime } from '../lib/format';
@@ -110,6 +110,7 @@ export function CompetitionDetailScreen() {
                 )}
               </div>
               {w.description && <p className="text-sm text-muted">{w.description}</p>}
+              {enteredAthletes.length > 0 && <ScoreLegend type={w.type} />}
 
               {enteredAthletes.length === 0 ? (
                 <EmptyState icon="✎" title="No athletes entered" hint="Add athletes in Setup to score this WOD." />

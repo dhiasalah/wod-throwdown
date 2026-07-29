@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useStore } from '../store';
 import { Card, EmptyState, SectionTitle, TypePill, WOD_TYPE_LABEL } from '../components/ui';
 import { Sheet } from '../components/Modal';
-import { formatTime, parseTime } from '../lib/format';
+import { TimeField } from '../components/TimePicker';
+import { formatTime } from '../lib/format';
 import type { Wod, WodType } from '../types';
 
 const TYPES: WodType[] = ['reps', 'time', 'load'];
@@ -95,11 +96,10 @@ function WodSheet({
   const [name, setName] = useState(wod?.name ?? '');
   const [description, setDescription] = useState(wod?.description ?? '');
   const [type, setType] = useState<WodType>(wod?.type ?? 'reps');
-  const [cap, setCap] = useState(wod?.timeCapSeconds != null ? formatTime(wod.timeCapSeconds) : '');
+  const [cap, setCap] = useState<number | null>(wod?.timeCapSeconds ?? null);
 
-  const capSeconds = type === 'time' ? parseTime(cap) : null;
-  const capValid = type !== 'time' || (cap.trim() !== '' && capSeconds != null && capSeconds > 0);
-  const valid = name.trim() !== '' && capValid;
+  const capSeconds = type === 'time' ? cap : null;
+  const valid = name.trim() !== '' && (type !== 'time' || (capSeconds != null && capSeconds > 0));
 
   return (
     <Sheet
@@ -155,9 +155,11 @@ function WodSheet({
 
       {type === 'time' && (
         <div>
-          <label className="label">Time cap (m:ss)</label>
-          <input className="field" value={cap} onChange={(e) => setCap(e.target.value)} placeholder="e.g. 12:00" inputMode="numeric" />
-          {!capValid && cap.trim() !== '' && <p className="mt-1 text-xs text-crimson">Enter a time like 12:00.</p>}
+          <div className="label">Time cap</div>
+          <TimeField value={cap} onChange={setCap} title="Time cap" placeholder="Tap to set the cap" />
+          <p className="mt-1.5 text-xs text-muted">
+            When the cap clock hits, everyone stops — no finish time can be above it.
+          </p>
         </div>
       )}
 

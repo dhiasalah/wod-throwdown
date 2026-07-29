@@ -80,6 +80,9 @@ Sort athletes best → worst:
 - **time** → **finishers first** (status `done` with `timeSeconds`), fastest first;
   then **capped non-finishers** (status `done` with `reps`, no time), more reps first.
   Finishers always rank above capped athletes.
+  The time cap is a **hard ceiling**: when the cap clock hits, everyone stops, so a
+  finish time can never exceed `timeCapSeconds`. This is enforced at entry (the wheels
+  stop at the cap) rather than in the ranker.
 - `absent` / `dnf` / **missing** → sorted to the **bottom** (they tie for last).
 - **Ties** (identical result) share the **average of the positions they occupy**
   (two tied for 2nd/3rd → 2.5 each).
@@ -108,6 +111,8 @@ Bottom tab navigation: **Athletes · WODs · Comps · Backup**.
 - **Competitions** — list + create. **Detail**: in-page tabs for **Setup** (pick WODs &
   athletes), one tab **per WOD** (score entry, input adapts to type), and **Leaderboard**
   (overall per division + per-WOD breakdown with medal badges).
+  Each WOD tab carries a **`ScoreLegend`** spelling out FIN / CAP / DNF / ABS — the four
+  mode buttons are the whole scoring interface, so they are never shown unexplained.
 - **Backup** — Export (download JSON) / Import (restore) / reset, with data counts.
 
 ## 7. Persistence, PWA & deployment
@@ -125,3 +130,12 @@ Bottom tab navigation: **Athletes · WODs · Comps · Backup**.
   results via `src/lib/result.ts`), which keeps it trivially testable and fast.
 - Deleting a division/athlete/WOD cascades to remove dependent scores and competition
   membership, so the store never holds dangling references.
+- **Times are picked, not typed.** A numeric keypad has no colon, so `m:ss` text entry
+  was error-prone (`845` parsed as 14:05). Both time inputs — a WOD's cap and an
+  athlete's finish time — use `TimeField` (`src/components/TimePicker.tsx`), two
+  scroll-snap wheels in a `Sheet`. The selectable ranges come from pure helpers in
+  `src/lib/timePicker.ts`, unit-tested like the scoring engine; passing `maxSeconds`
+  truncates the wheels so an out-of-range time is unreachable rather than rejected.
+  Scores stored before a cap was lowered still show a warning and open clamped at the cap.
+- `Sheet` keeps a stack of open sheets so **Escape closes only the topmost** — the time
+  picker opens over the WOD editor, and dismissing it must not discard the edit.

@@ -55,13 +55,19 @@ Bottom tabs: **Athletes · WODs · Comps · Backup**.
 5. **Backup** — **Export** a `.json` file to keep your data safe or move it to another
    phone; **Import** to restore it.
 
-For each athlete on a score-entry tab:
+For each athlete on a score-entry tab (these codes are also shown as a legend right above
+the athlete list, so you don't need this page while judging):
 
-- **Score / Fin** — enter the result (reps, finish time `m:ss`, or kg).
-- **Cap** (For Time only) — didn't finish; enter reps completed at the cap.
-- **DNF** — did not finish / no valid result.
-- **Abs** — absent.
+- **FIN** / **SCORE** — finished before the cap; enter the result (reps, finish time, or kg).
+- **CAP** (For Time only) — still working when the cap hit; enter reps completed.
+- **DNF** — stopped early / no valid result.
+- **ABS** — absent, didn't show.
 - Tap the highlighted mode again to clear it.
+
+**Times are picked, not typed.** Tapping a time field — a WOD's cap, or an athlete's finish
+time — opens a picker with **minutes** and **seconds** wheels. On a For Time WOD the wheels
+stop at the time cap: when the cap clock hits everyone stops, so a finish time above the cap
+is impossible to enter.
 
 ---
 

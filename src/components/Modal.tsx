@@ -1,4 +1,10 @@
-import { useEffect, type ReactNode } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
+
+/**
+ * Open sheets, innermost last. Sheets can nest (the time picker opens over the
+ * WOD editor), and Escape must close only the one on top.
+ */
+const openSheets: symbol[] = [];
 
 /** A mobile-first bottom sheet. Slides up from the bottom; tap the scrim to close. */
 export function Sheet({
@@ -14,14 +20,25 @@ export function Sheet({
   children: ReactNode;
   footer?: ReactNode;
 }) {
+  // Read through a ref so a caller's inline `onClose` doesn't re-register the
+  // sheet and shuffle it back to the top of the stack while a child is open.
+  const closeRef = useRef(onClose);
+  closeRef.current = onClose;
+
   useEffect(() => {
     if (!open) return;
+    const id = Symbol('sheet');
+    openSheets.push(id);
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape' && openSheets[openSheets.length - 1] === id) closeRef.current();
     };
     window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [open, onClose]);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      const i = openSheets.indexOf(id);
+      if (i !== -1) openSheets.splice(i, 1);
+    };
+  }, [open]);
 
   if (!open) return null;
 

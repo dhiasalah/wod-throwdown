@@ -102,6 +102,15 @@
     }
   }
 
+  /* Wheel columns scroll but shouldn't show a scrollbar over the numbers. */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
   /* Chip / pill */
   .chip {
     @apply inline-flex items-center gap-1.5 rounded-full border border-hairline bg-paper px-3 py-1 text-sm font-500 text-ink;
